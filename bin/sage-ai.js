@@ -50,6 +50,8 @@ const FILES = [
     { src: "sage/commands/flow.md", dest: "commands/flow.md" },
     { src: "sage/commands/why.md", dest: "commands/why.md" },
     { src: "sage/commands/wish.md", dest: "commands/wish.md" },
+    { src: "sage/commands/sec.md", dest: "commands/sec.md" },
+    { src: "sage/commands/audit.md", dest: "commands/audit.md" },
 ];
 
 const LANGUAGES = [
@@ -257,6 +259,8 @@ console.log(kleur.cyan("  /exp-file  ") + kleur.white("  🔎  explain a specifi
 console.log(kleur.cyan("  /flow      ") + kleur.white("  🔀  visualize module relationships"));
 console.log(kleur.cyan("  /wish      ") + kleur.white("  🧞  your learning companion — guided plans with memory"));
 console.log(kleur.cyan("  /why       ") + kleur.white("  💭  archaeology of design decisions"));
+console.log(kleur.cyan("  /sec       ") + kleur.white("  🛡️  heuristic security read"));
+console.log(kleur.cyan("  /audit     ") + kleur.white("  📋  friendly craft audit"));
 console.log("");
 console.log(kleur.gray("  ─────────────────────────────────────────────────"));
 console.log(kleur.magenta("  Your Genie for OpenCode~"));

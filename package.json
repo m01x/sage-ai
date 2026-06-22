@@ -1,6 +1,6 @@
 {
   "name": "sage-ai",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Install Sage — Your Genie for OpenCode",
   "type": "module",
   "bin": {
