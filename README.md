@@ -70,7 +70,7 @@ opencode
 | `/exp-file @path`  | Explica un archivo específico — qué hace, sus inputs/outputs y su diccionario interno    |
 | `/flow @path`      | Visualiza cómo un archivo se conecta con el resto del proyecto                           |
 | `/why @path`       | Arqueología de decisiones — ¿por qué el código está hecho así?                           |
-| `/wish`            | Tu mentor guiado — planes de aprendizaje con memoria persistente                         |
+| `/wish`            | Tu mentor guiado — planes de aprendizaje (teoría → ejercicios → proyecto) con sandbox aislado y memoria persistente |
 
 ## Cómo funciona
 
@@ -82,11 +82,35 @@ Sage es un **agente primario** de OpenCode con permisos de solo lectura. Delega 
 
 También detecta y carga cualquier **skill** instalada en tu proyecto (`.opencode/skills/`, `.agents/skills/`, `.claude/skills/`) para darte respuestas específicas a tu stack.
 
-Sage **nunca escribe, edita ni crea archivos** en tu código. La única excepción es su propia memoria en `.opencode/sage/`, donde guarda un índice de fuentes de verdad (`sources.json`) y la bitácora de wishes. Para actuar sobre lo que aprendiste, vuelve al agente Build con `Tab`.
+Sage **nunca escribe, edita ni crea archivos** en tu código. Tiene tres excepciones muy estrechas, todas relacionadas con `/wish`:
+
+- Su propia memoria en `.opencode/sage/` (`sources.json` + la bitácora de cada wish en `wishes/<id>.json`).
+- Al crear un wish nuevo, una carpeta de **sandbox** en `.sage/sandbox/<wish-id>/` para que puedas hacer ejercicios sin manchar el codebase.
+- Al crear esa sandbox, una sola línea en tu `.gitignore` (`.sage/sandbox/`) para que la sandbox no entre en commits.
+
+Para actuar sobre lo que aprendiste, vuelve al agente Build con `Tab`.
+
+### Cómo funciona `/wish` (modelo pedagógico)
+
+`/wish` convierte un objetivo en un plan de aprendizaje guiado. Cada plan sigue siempre la misma secuencia:
+
+```
+📚 Teoría      →  conceptos que necesitas entender, explicados con calma
+🛠 Ejercicios  →  práctica en .sage/sandbox/<id>/ (sandbox gitignored, sin tocar tu proyecto)
+🎯 Proyecto    →  aplicar lo aprendido a tu código real, paso a paso
+```
+
+- Antes de planificar, Sage **lee tu proyecto** (`sources.json` + un escaneo rápido con `@explore` dirigido a la feature) para que el plan esté informado por tu código real, no por suposiciones.
+- El stack se infiere del proyecto. Sage solo pregunta por stack cuando hay una decisión real que tomar (añadir tech nueva, por ejemplo).
+- Los ejercicios siempre ocurren en una **sandbox aislada** (`.sage/sandbox/<id>/`, agregada a `.gitignore` automáticamente) y nunca en tu codebase. Así puedes equivocarte sin romper nada.
+- Cada sesión genera **archivos en la sandbox**: un `.md` con el resumen de la teoría, y archivos `.rs`/`.js`/etc. para los ejercicios, con scaffolding que varía según el nivel de co-op (TODO markers en Casual, solo firmas en Formal, solo specs en Senior).
+- Sage **revisa tu código** de ejercicio antes de avanzar. Lee los archivos de la sandbox, da feedback y no pasa a la siguiente sesión hasta que el trabajo esté aprobado.
+- Al final de cada sesión Sage te dice _"listo, hacé el ejercicio y avisame"_. No pregunta inmediatamente si querés seguir — espera a que vuelvas con el trabajo hecho.
+- Todas las decisiones se confirman a través de la **GUI nativa de OpenCode** (la tool `question`) cuando el agente tiene acceso; si no, pregunta en texto numerado.
 
 ### Archivos ignorados
 
-`.env`, `.env.*`, `node_modules/`, `.git/`, `dist/`, `build/`, `coverage/` y cualquier archivo con credenciales.
+`.env`, `.env.*`, `node_modules/`, `.git/`, `dist/`, `build/`, `coverage/`, `.sage/sandbox/` (creado por `/wish`) y cualquier archivo con credenciales.
 
 ## Modelo
 
